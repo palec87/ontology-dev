@@ -1,0 +1,77 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ns1: <file:///home/david-palecek/coding/ontologies/ontology-dev/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Employee> a owl:Class ;
+    rdfs:label "Employee"@en ;
+    rdfs:comment "A person who works for an organization"@en ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:onProperty <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#worksFor> ;
+            owl:someValuesFrom <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Organization> ],
+        <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Person> .
+
+<file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#examplePerson> a <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Person>,
+        owl:NamedIndividual ;
+    rdfs:label "Example Person"@en ;
+    ns1:hasName "John Doe"^^xsd:string .
+
+<file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#hasName> a owl:DatatypeProperty ;
+    rdfs:label "has name"@en ;
+    rdfs:comment "The name of an entity"@en ;
+    rdfs:domain <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Entity> ;
+    rdfs:range xsd:string .
+
+<file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#hasRelationTo> a owl:ObjectProperty ;
+    rdfs:label "has relation to"@en ;
+    rdfs:comment "A general relation between two entities"@en ;
+    rdfs:domain <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Entity> ;
+    rdfs:range <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Entity> .
+
+<file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#hasValue> a owl:DatatypeProperty ;
+    rdfs:label "has value"@en ;
+    rdfs:comment "A numeric value associated with an entity"@en ;
+    rdfs:domain <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Entity> ;
+    rdfs:range xsd:decimal .
+
+<http://example.org/ontology> a owl:Ontology ;
+    dcterms:created "2025-10-15"^^xsd:date ;
+    dcterms:creator "PSB" ;
+    dcterms:description "Ontology to describe organizational structure and scientific experiments conducted within scientific institutions"@en ;
+    dcterms:modified "2025-10-15"^^xsd:date ;
+    dcterms:title "Scientific Institution Ontology"@en ;
+    owl:versionIRI <http://example.org/ontology/1.0> ;
+    owl:versionInfo "1.0" .
+
+dc:creator a owl:AnnotationProperty .
+
+dcterms:created a owl:AnnotationProperty .
+
+dcterms:description a owl:AnnotationProperty .
+
+dcterms:modified a owl:AnnotationProperty .
+
+dcterms:title a owl:AnnotationProperty .
+
+<file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#worksFor> a owl:ObjectProperty ;
+    rdfs:label "works for"@en ;
+    rdfs:comment "Indicates that a person is employed by an organization"@en ;
+    rdfs:domain <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Person> ;
+    rdfs:range <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Organization> .
+
+<file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Organization> a owl:Class ;
+    rdfs:label "Organization"@en ;
+    rdfs:comment "An organized group of people with a particular purpose"@en ;
+    rdfs:subClassOf <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Entity> .
+
+<file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Person> a owl:Class ;
+    rdfs:label "Person"@en ;
+    rdfs:comment "A human being"@en ;
+    rdfs:subClassOf <file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Entity> .
+
+<file:///home/david-palecek/coding/ontologies/ontology-dev/template.owl#Entity> a owl:Class ;
+    rdfs:label "Entity"@en ;
+    rdfs:comment "The root class for all entities in this ontology"@en .
+

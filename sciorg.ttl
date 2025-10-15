@@ -1,0 +1,102 @@
+@prefix : <http://example.org/ontology/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix org: <ttp://www.w3.org/ns/org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#>
+
+
+<http://example.org/ontology> a owl:Ontology ;
+    dct:created "2025-10-15"^^xsd:date ;
+    dct:creator "PSB" ;
+    dct:description "Ontology to describe organizational structure and scientific experiments conducted within scientific institutions"@en ;
+    dct:modified "2025-10-15"^^xsd:date ;
+    dct:title "Scientific Institution Ontology"@en ;
+    owl:versionIRI <http://example.org/ontology/1.0> ;
+    owl:versionInfo "1.0" .
+
+
+Experiment a owl:Class ;
+    rdf:label "Experiment"@en ;
+    rdf:comment "A scientific experiment conducted within an institution."@en ;
+    rdf:subClassOf owl:Thing ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            [
+                a owl:Restriction ;
+                owl:onProperty :performedBy ;
+                owl:someValuesFrom org:Organization
+            ]
+            [
+                a owl:Restriction ;
+                owl:onProperty :hasInstrument ;
+                owl:someValuesFrom :Instrument
+            ]
+        )
+    ] .
+
+:performedBy a owl:ObjectProperty ;
+    rdf:domain :Experiment ;
+    rdf:range org:Organization ;
+    rdf:label "performed by"@en ;
+    rdf:comment "Links an experiment to the organization that performed it."@en .
+
+:hasInstrument a owl:ObjectProperty ;
+    rdf:domain :Experiment ;
+    rdf:range :Instrument ;
+    rdf:label "has instrument"@en ;
+    rdf:comment "Links an experiment to the instruments used."@en .
+
+
+Instrument a owl:Class ;
+    rdf:label "Instrument"@en ;
+    rdf:comment "An instrument used in a scientific experiment."@en ;
+    rdf:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :usedInExperiment ;
+        owl:someValuesFrom :Experiment
+    ] .
+
+:usedInExperiment a owl:ObjectProperty ;
+    rdf:domain :Instrument ;
+    rdf:range :Experiment ;
+    rdf:label "used in experiment"@en ;
+    rdf:comment "Links an instrument to the experiment it is used in."@en .
+
+
+<http://ccmar.pt>
+    rdf:type org:Organization
+    org:hasUnit <http://ccmar.pt/pbs>
+    vcard:hasName [
+        vcard:fn "CCMAR — Centro de Ciências do Mar Algarve" ;
+        vcard:organizationName "Centro de Ciências do Mar Algarve (CCMAR)" ;
+    ] ;
+    vcard:hasAddress [
+        a vcard:Work ;
+        vcard:streetAddress "Campus de Gambelas, Edifício 7" ;
+        vcard:postalCode "8005-139" ;
+        vcard:locality "Faro" ;
+        vcard:countryName "Portugal" ;
+    ] ;
+    vcard:hasTelephone [
+        a vcard:Work ;
+        vcard:telephone "+351 289 800 051" ;
+    ] ;
+    vcard:hasEmail [
+        a vcard:Work ;
+        vcard:email "ccmar@ualg.pt" ;
+    ] .
+
+<http://ccmar.pt/pbs>
+    rdf:type org: OrganizationalUnit
+    org:unitOf <http://ccmar.pt>
+    skos:prefLabel "Plant and system biology unit"@en
+    org:hasPrimarySite <http://ccmar.pt> .
+
+
+
+
+
