@@ -1,11 +1,13 @@
 @prefix : <http://example.org/ontology/> .
 @prefix dct: <http://purl.org/dc/terms/> .
-@prefix org: <ttp://www.w3.org/ns/org/> .
+@prefix org: <http://www.w3.org/ns/org#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#>
-@prefix vcard: <http://www.w3.org/2006/vcard/ns#>
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix edam: <https://edamontology.org/>
 
 
 <http://example.org/ontology> a owl:Ontology ;
@@ -18,17 +20,17 @@
     owl:versionInfo "1.0" .
 
 
-Experiment a owl:Class ;
-    rdf:label "Experiment"@en ;
-    rdf:comment "A scientific experiment conducted within an institution."@en ;
-    rdf:subClassOf owl:Thing ;
+:Experiment a owl:Class ;
+    rdfs:label "Experiment"@en ;
+    rdfs:comment "A scientific experiment conducted within an institution."@en ;
+    rdfs:subClassOf owl:Thing ;
     owl:equivalentClass [
         a owl:Class ;
         owl:intersectionOf (
             [
                 a owl:Restriction ;
                 owl:onProperty :performedBy ;
-                owl:someValuesFrom org:Organization
+                owl:someValuesFrom org:OrganizationalUnit
             ]
             [
                 a owl:Restriction ;
@@ -39,37 +41,70 @@ Experiment a owl:Class ;
     ] .
 
 :performedBy a owl:ObjectProperty ;
-    rdf:domain :Experiment ;
-    rdf:range org:Organization ;
-    rdf:label "performed by"@en ;
-    rdf:comment "Links an experiment to the organization that performed it."@en .
+    rdfs:domain :Experiment ;
+    rdfs:range org:OrganizationalUnit ;
+    rdfs:label "performed by unit"@en ;
+    rdfs:comment "Links an experiment to the organization that performs it."@en .
 
 :hasInstrument a owl:ObjectProperty ;
-    rdf:domain :Experiment ;
-    rdf:range :Instrument ;
-    rdf:label "has instrument"@en ;
-    rdf:comment "Links an experiment to the instruments used."@en .
+    rdfs:domain :Experiment ;
+    rdfs:range :Instrument ;
+    rdfs:label "has instrument"@en ;
+    rdfs:comment "Links an experiment to the instruments used."@en .
 
 
-Instrument a owl:Class ;
-    rdf:label "Instrument"@en ;
-    rdf:comment "An instrument used in a scientific experiment."@en ;
-    rdf:subClassOf [
+:SequencingExperiment a owl:Class ;
+    rdfs:subClassOf :Experiment ;
+    rdfs:label "Sequencing experiment"@en ;
+    rdfs:comment "An experiment involving sequencing of biological molecules"@en .
+
+:DNASequencingExperiment a owl:Class ;
+    rdfs:subClassOf :sequencing ;
+    rdfs:label "DNA sequencing experiment" ;
+    rdfs:comment "sadfasf".
+
+:hasOutputData a owl:ObjectProperty ;
+    rdfs:domain :DNASequencingExperiment ;
+    rdfs:label "has output data type"@en ;
+    rdfs:range edam:data_1249 ;
+    rdfs:comment "Range is EDAM data_1249 (Sequence length)."@en .
+    edam:data_1249 rdfs:label "Sequence length"@en .
+
+:RNASequencingExperiment a owl:Class ;
+    rdfs:subClassOf :sequencing ;
+    rdfs:label "DNA sequencing experiment" ;
+    rdfs:comment "sadfasf".
+
+:hasOutputData a owl:ObjectProperty ;
+    rdfs:domain :RNASequencingExperiment ;
+    rdfs:label "has output data type"@en ;
+    rdfs:range edam:data_1249 ;
+    rdfs:comment "Range is EDAM data_1249 (Sequence length)."@en .
+    edam:data_1249 rdfs:label "Sequence length"@en .
+
+[]  rdf:type     owl:AllDisjointClasses ;
+     owl:members  ( :DNASequencingExperiment  :RNASequencingExperiment ) . 
+
+:Instrument a owl:Class ;
+    rdfs:label "Instrument"@en ;
+    rdfs:comment "An instrument used in a scientific experiment."@en ;
+    rdfs:subClassOf [
         a owl:Restriction ;
         owl:onProperty :usedInExperiment ;
         owl:someValuesFrom :Experiment
     ] .
 
 :usedInExperiment a owl:ObjectProperty ;
-    rdf:domain :Instrument ;
-    rdf:range :Experiment ;
-    rdf:label "used in experiment"@en ;
-    rdf:comment "Links an instrument to the experiment it is used in."@en .
+    rdfs:domain :Instrument ;
+    rdfs:range :Experiment ;
+    rdfs:label "used in experiment"@en ;
+    rdfs:comment "Links an instrument to the experiment it is used in."@en .
+
 
 
 <http://ccmar.pt>
-    rdf:type org:Organization
-    org:hasUnit <http://ccmar.pt/pbs>
+    rdf:type org:Organization ;
+    org:hasUnit <http://ccmar.pt/pbs> ;
     vcard:hasName [
         vcard:fn "CCMAR — Centro de Ciências do Mar Algarve" ;
         vcard:organizationName "Centro de Ciências do Mar Algarve (CCMAR)" ;
@@ -91,11 +126,23 @@ Instrument a owl:Class ;
     ] .
 
 <http://ccmar.pt/pbs>
-    rdf:type org: OrganizationalUnit
-    org:unitOf <http://ccmar.pt>
-    skos:prefLabel "Plant and system biology unit"@en
+    rdf:type org:OrganizationalUnit ;
+    org:unitOf <http://ccmar.pt> ;
+    skos:prefLabel "Plant and system biology unit"@en ;
     org:hasPrimarySite <http://ccmar.pt> .
 
+
+<http://ccmar.pt/experiments/illumina-amplicon-sequencing>
+    rdf:type :DNASequencingExperiment ;
+    rdfs:label "Illumina amplicon sequencing"@en ;
+    rdfs:comment "DNA sequencing experiment using Illumina amplicon sequencing technology"@en ;
+    :performedBy <http://ccmar.pt/pbs> ;
+    :hasInstrument <http://ccmar.pt/instruments/miseq> .
+
+<http://ccmar.pt/instruments/miseq>
+    rdf:type :Instrument ;
+    rdfs:label "MiSeq"@en ;
+    rdfs:comment "Illumina MiSeq sequencing instrument"@en .
 
 
 
